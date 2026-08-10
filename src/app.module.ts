@@ -8,6 +8,7 @@ import { ProductsModule } from './products/products.module';
 import { CategoriesModule } from './categories/categories.module';
 import { SectorsModule } from './sectors/sectors.module';
 import { EnquiriesModule } from './enquiries/enquiries.module';
+import { VideosModule } from './videos/videos.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { EnquiriesModule } from './enquiries/enquiries.module';
     CategoriesModule,
     SectorsModule,
     EnquiriesModule,
+    VideosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

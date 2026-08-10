@@ -4,6 +4,55 @@ import { ProductsService } from './products/products.service';
 import { CategoriesService } from './categories/categories.service';
 import { SectorsService } from './sectors/sectors.service';
 import { EnquiriesService } from './enquiries/enquiries.service';
+import { VideosService } from './videos/videos.service';
+
+const videosSeed = [
+  {
+    id: 'SWkGWVDOtoM',
+    title: 'Outdoor Gym Live Demonstration',
+    category: 'Fitness Equipment',
+    url: 'https://www.youtube.com/shorts/SWkGWVDOtoM',
+    embedUrl: 'https://www.youtube.com/embed/SWkGWVDOtoM?autoplay=1&mute=1&loop=1&playlist=SWkGWVDOtoM&controls=1',
+    order: 1,
+    isActive: true
+  },
+  {
+    id: 'Z4U7ULbBhKU',
+    title: 'Playground Multi-Play System Installation',
+    category: 'Play Equipment',
+    url: 'https://www.youtube.com/shorts/Z4U7ULbBhKU',
+    embedUrl: 'https://www.youtube.com/embed/Z4U7ULbBhKU?autoplay=1&mute=1&loop=1&playlist=Z4U7ULbBhKU&controls=1',
+    order: 2,
+    isActive: true
+  },
+  {
+    id: 'K4ka1PmXV0Q',
+    title: 'Solar High Mast Erection & Field Test',
+    category: 'Solar Infrastructure',
+    url: 'https://www.youtube.com/shorts/K4ka1PmXV0Q',
+    embedUrl: 'https://www.youtube.com/embed/K4ka1PmXV0Q?autoplay=1&mute=1&loop=1&playlist=K4ka1PmXV0Q&controls=1',
+    order: 3,
+    isActive: true
+  },
+  {
+    id: 'C_iYOyWlGb0',
+    title: 'Solar RO Water Plant Demonstration',
+    category: 'Water Purification',
+    url: 'https://www.youtube.com/shorts/C_iYOyWlGb0',
+    embedUrl: 'https://www.youtube.com/embed/C_iYOyWlGb0?autoplay=1&mute=1&loop=1&playlist=C_iYOyWlGb0&controls=1',
+    order: 4,
+    isActive: true
+  },
+  {
+    id: '1dzwbVmiHu0',
+    title: 'Paras Yoga Mat Cushioning & Grip Test',
+    category: 'Yoga & Wellness',
+    url: 'https://www.youtube.com/shorts/1dzwbVmiHu0',
+    embedUrl: 'https://www.youtube.com/embed/1dzwbVmiHu0?autoplay=1&mute=1&loop=1&playlist=1dzwbVmiHu0&controls=1',
+    order: 5,
+    isActive: true
+  }
+];
 
 const enquiriesSeed = [
   {
@@ -42,6 +91,10 @@ const categoriesSeed = [
   { id: 'outdoor-gym', name: 'Outdoor Gym Equipment', iconName: 'Gym' },
   { id: 'playground', name: 'Playground Equipment', iconName: 'Playground' },
   { id: 'solar-lighting', name: 'Solar Lighting Solutions', iconName: 'Solar' },
+  { id: 'solar-energy', name: 'Solar Energy Solutions', iconName: 'Solar' },
+  { id: 'solar-ro-water', name: 'Solar RO Water Systems', iconName: 'Water' },
+  { id: 'civil-infrastructure', name: 'Civil & Infrastructure Works', iconName: 'Civil' },
+  { id: 'engineering-procurement', name: 'Engineering Procurement & Supply', iconName: 'Supply' },
   { id: 'yoga-mats', name: 'Yoga Mats & Accessories', iconName: 'Yoga' },
   { id: 'park-furniture', name: 'Park Furniture', iconName: 'Furniture' },
   { id: 'custom', name: 'Custom Fabrication', iconName: 'Custom' },
@@ -50,10 +103,14 @@ const categoriesSeed = [
 const sectorsSeed = [
   { id: 1, title: 'PUBLIC PARKS & SOCIETIES', image: '/src/assets/sector_parks.png', isOrange: false, iconName: 'Parks' },
   { id: 2, title: 'SCHOOLS & INSTITUTES', image: '/src/assets/sector_schools.png', isOrange: true, iconName: 'Schools' },
-  { id: 3, title: 'GOVERNMENT PROJECTS', image: '/src/assets/sector_government.png', isOrange: false, iconName: 'Government' },
+  { id: 3, title: 'GOVERNMENT PROJECTS & PSUS', image: '/src/assets/sector_government.png', isOrange: false, iconName: 'Government' },
   { id: 4, title: 'LUXURY RESORTS & HOTELS', image: '/src/assets/sector_resorts.png', isOrange: true, iconName: 'Resorts' },
   { id: 5, title: 'CORPORATE & IT PARKS', image: '/src/assets/sector_corporate.png', isOrange: false, iconName: 'Corporate' },
   { id: 6, title: 'HOUSING TOWNSHIPS', image: '/src/assets/sector_housing.png', isOrange: true, iconName: 'Housing' },
+  { id: 7, title: 'SMART CITY PROJECTS', image: '/src/assets/sector_government.png', isOrange: false, iconName: 'SmartCity' },
+  { id: 8, title: 'RURAL DEVELOPMENT & PANCHAYATS', image: '/src/assets/sector_parks.png', isOrange: true, iconName: 'Rural' },
+  { id: 9, title: 'HEALTHCARE & HOSPITALS', image: '/src/assets/sector_schools.png', isOrange: false, iconName: 'Hospitals' },
+  { id: 10, title: 'CSR & NGO PROJECTS', image: '/src/assets/sector_corporate.png', isOrange: true, iconName: 'CSR' },
 ];
 
 const productsSeed = [
@@ -746,70 +803,70 @@ const productsSeed = [
 async function run() {
   console.log('Seeding process starting...');
   const app = await NestFactory.createApplicationContext(AppModule);
-  
+
   const productsService = app.get(ProductsService);
   const categoriesService = app.get(CategoriesService);
   const sectorsService = app.get(SectorsService);
   const enquiriesService = app.get(EnquiriesService);
+  const videosService = app.get(VideosService);
 
-  // 1. Seed Categories
-  console.log('Clearing existing categories...');
+  // 1. Seed Categories (Non-destructive)
+  console.log('Updating categories...');
   const existingCategories = await categoriesService.findAll();
-  for (const cat of existingCategories) {
-    await categoriesService.remove(cat.id);
-  }
-  console.log('Seeding default categories...');
   for (const cat of categoriesSeed) {
-    await categoriesService.create(cat);
-    console.log(`- Seeded category: ${cat.name}`);
+    const found = existingCategories.find(c => c.id === cat.id || c.name === cat.name);
+    if (!found) {
+      await categoriesService.create(cat);
+      console.log(`- Seeded new category: ${cat.name}`);
+    }
   }
 
-  // 2. Seed Sectors
-  console.log('Clearing existing sectors...');
-  const existingSectors = await sectorsService.findAll();
-  // We can write a custom delete or just delete them directly via Mongoose. Since we only have updates in SectorsService, let's use direct model or custom script.
-  // Actually, we can just update them or delete if needed. Let's see: SectorsService doesn't have a remove method, but we can write one or just create them if they don't exist.
-  // Let's implement a create if they don't exist, or we can just delete all using mongoose inside seed script:
+  // 2. Seed Sectors (Non-destructive)
+  console.log('Updating sectors...');
   const sectorModel = (sectorsService as any).sectorModel;
-  if (sectorModel) {
-    await sectorModel.deleteMany({});
-  }
-  console.log('Seeding default sectors...');
-  for (const sec of sectorsSeed) {
-    await sectorsService.create(sec);
-    console.log(`- Seeded sector: ${sec.title}`);
+  const existingSectors = await sectorsService.findAll();
+  if (existingSectors.length === 0) {
+    for (const sec of sectorsSeed) {
+      await sectorsService.create(sec);
+      console.log(`- Seeded sector: ${sec.title}`);
+    }
   }
 
-  // 3. Seed Products
-  console.log('Clearing existing products...');
+  // 3. Seed Products (Non-destructive: preserve all admin created products!)
+  console.log('Updating default products...');
   const existingProducts = await productsService.findAll();
-  for (const prod of existingProducts) {
-    const doc = prod as any;
-    await productsService.remove(doc.id || doc._id.toString());
-  }
-  console.log('Seeding default products...');
   for (const prod of productsSeed) {
-    await productsService.create(prod);
-    console.log(`- Seeded product: ${prod.title}`);
+    const found = existingProducts.find(p => p.title === prod.title);
+    if (!found) {
+      await productsService.create(prod);
+      console.log(`- Seeded default product: ${prod.title}`);
+    }
   }
 
-  // 4. Seed Enquiries
-  console.log('Clearing existing enquiries...');
+  // 4. Seed Enquiries (Non-destructive)
+  console.log('Updating default enquiries...');
   const existingEnquiries = await enquiriesService.findAll();
-  for (const enq of existingEnquiries) {
-    const doc = enq as any;
-    await enquiriesService.remove(doc.id || doc._id.toString());
-  }
-  console.log('Seeding default enquiries...');
-  for (const enq of enquiriesSeed) {
-    // Avoid sending notifications during seed, we save it
-    const model = (enquiriesService as any).enquiryModel;
-    const createdEnquiry = new model(enq);
-    await createdEnquiry.save();
-    console.log(`- Seeded enquiry: ${enq.subject} from ${enq.name}`);
+  if (existingEnquiries.length === 0) {
+    for (const enq of enquiriesSeed) {
+      const model = (enquiriesService as any).enquiryModel;
+      const createdEnquiry = new model(enq);
+      await createdEnquiry.save();
+      console.log(`- Seeded enquiry: ${enq.subject} from ${enq.name}`);
+    }
   }
 
-  console.log('Database seeding completed successfully!');
+  // 5. Seed Videos (Non-destructive)
+  console.log('Updating default videos...');
+  const existingVideos = await videosService.findAll();
+  for (const vid of videosSeed) {
+    const found = existingVideos.find(v => v.id === vid.id || v.url === vid.url);
+    if (!found) {
+      await videosService.create(vid);
+      console.log(`- Seeded default video: ${vid.title}`);
+    }
+  }
+
+  console.log('Database seeding completed successfully (All user data preserved)!');
   await app.close();
   process.exit(0);
 }

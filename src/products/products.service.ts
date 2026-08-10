@@ -11,7 +11,7 @@ export class ProductsService {
 
   async findAll(category?: string): Promise<Product[]> {
     const query = category && category !== 'All' ? { category } : {};
-    return this.productModel.find(query).exec();
+    return this.productModel.find(query).sort({ createdAt: -1, _id: -1 }).exec();
   }
 
   async findOne(id: string): Promise<Product> {

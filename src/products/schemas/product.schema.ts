@@ -118,8 +118,8 @@ export class Product {
   @Prop()
   material: string;
 
-  @Prop({ required: true, type: Number })
-  price: number;
+  @Prop({ required: false, type: Number })
+  price?: number;
 
   @Prop()
   suitability: string;
