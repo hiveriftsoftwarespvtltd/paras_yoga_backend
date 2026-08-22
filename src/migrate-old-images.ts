@@ -26,20 +26,23 @@ async function migrate() {
 
   let count = 0;
 
-  for (const p of products) {
+  for (let i = 0; i < products.length; i++) {
+    const p = products[i];
     let updated = false;
     const updateDoc: any = {};
 
+    console.log(`Checking [${i + 1}/${products.length}]: "${p.title || p._id}"...`);
+
     // 1. Check Main Image
     if (p.image && typeof p.image === 'string' && p.image.startsWith('data:')) {
-      console.log(`Uploading main image for product: ${p.title || p._id}`);
+      console.log(` → Uploading main image to Cloudinary for: "${p.title || p._id}"...`);
       try {
         const res = await cloudinary.uploader.upload(p.image, { folder: 'products', resource_type: 'auto' });
         updateDoc.image = res.secure_url;
         updateDoc.imagePublicId = res.public_id;
         updated = true;
       } catch (e: any) {
-        console.error(`Failed to upload main image for ${p._id}:`, e.message);
+        console.error(` ❌ Failed main image upload for ${p._id}:`, e.message);
       }
     }
 
@@ -57,7 +60,7 @@ async function migrate() {
             newPublicIds.push(res.public_id);
             thumbUpdated = true;
           } catch (e: any) {
-            console.error(`Failed thumb upload for ${p._id}:`, e.message);
+            console.error(` ❌ Failed thumb upload for ${p._id}:`, e.message);
           }
         } else {
           newThumbs.push(thumb);
@@ -73,25 +76,28 @@ async function migrate() {
 
     // 3. Check Video
     if (p.video && typeof p.video === 'string' && p.video.startsWith('data:')) {
-      console.log(`Uploading video for product: ${p.title || p._id}`);
+      console.log(` → Uploading video to Cloudinary for: "${p.title || p._id}"...`);
       try {
         const res = await cloudinary.uploader.upload(p.video, { folder: 'products/videos', resource_type: 'auto' });
         updateDoc.video = res.secure_url;
         updateDoc.videoPublicId = res.public_id;
         updated = true;
       } catch (e: any) {
-        console.error(`Failed video upload for ${p._id}:`, e.message);
+        console.error(` ❌ Failed video upload for ${p._id}:`, e.message);
       }
     }
 
     if (updated) {
       await collection.updateOne({ _id: p._id }, { $set: updateDoc });
       count++;
-      console.log(`Successfully migrated product: ${p.title || p._id}`);
+      console.log(` ✅ Updated product [${i + 1}/${products.length}] in MongoDB!`);
     }
   }
 
-  console.log(`\nMigration complete! Updated ${count} products.`);
+  console.log(`\n========================================`);
+  console.log(`🎉 Migration complete! Successfully converted ${count} products to Cloudinary.`);
+  console.log(`========================================\n`);
+
   await client.close();
 }
 
