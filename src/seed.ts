@@ -56,8 +56,8 @@ const videosSeed = [
 
 const enquiriesSeed = [
   {
-    name: 'Apurva Jain',
-    email: 'apurva.jain@example.com',
+    name: 'APURV JAIN',
+    email: 'APURV.jain@example.com',
     phone: '+91 98765 43210',
     subject: 'Bulk Gym Setup Quote',
     product: 'Air Walker',

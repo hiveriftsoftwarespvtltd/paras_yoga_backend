@@ -128,7 +128,13 @@ export class Product {
   image: string; // Base64 data URL or asset URL
 
   @Prop()
+  imagePublicId?: string;
+
+  @Prop()
   video: string; // Base64 data URL or external video link
+
+  @Prop()
+  videoPublicId?: string;
 
   @Prop()
   desc: string;
@@ -150,6 +156,10 @@ export class Product {
 
   @Prop({ type: [String], default: [] })
   thumbnails: string[];
+
+  @Prop({ type: [String], default: [] })
+  thumbnailPublicIds?: string[];
+
 
   @Prop({ type: [String], default: [] })
   overviewBullets: string[];

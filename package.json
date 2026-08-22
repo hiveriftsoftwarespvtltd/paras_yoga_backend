@@ -28,6 +28,7 @@
     "@nestjs/mongoose": "^11.0.4",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
+    "cloudinary": "^2.10.1",
     "mongoose": "^9.7.4",
     "nodemailer": "^9.0.3",
     "passport": "^0.7.0",

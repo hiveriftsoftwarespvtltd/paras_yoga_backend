@@ -9,6 +9,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { SectorsModule } from './sectors/sectors.module';
 import { EnquiriesModule } from './enquiries/enquiries.module';
 import { VideosModule } from './videos/videos.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { VideosModule } from './videos/videos.module';
         uri: configService.get<string>('MONGODB_URI') || configService.get<string>('MONGO_URI'),
       }),
     }),
+    CloudinaryModule,
     AuthModule,
     ProductsModule,
     CategoriesModule,
@@ -33,4 +35,4 @@ import { VideosModule } from './videos/videos.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
