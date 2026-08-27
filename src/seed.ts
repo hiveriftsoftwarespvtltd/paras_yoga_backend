@@ -5,6 +5,7 @@ import { CategoriesService } from './categories/categories.service';
 import { SectorsService } from './sectors/sectors.service';
 import { EnquiriesService } from './enquiries/enquiries.service';
 import { VideosService } from './videos/videos.service';
+import { GalleryService } from './gallery/gallery.service';
 
 const videosSeed = [
   {
@@ -800,6 +801,66 @@ const productsSeed = [
   }
 ];
 
+
+const gallerySeed = [
+  {
+    title: 'Outdoor Gym Fitness Park',
+    category: 'OUTDOOR GYM',
+    location: 'Public Park, Connaught Place, New Delhi',
+    image: '/src/assets/sol_gym.jpg',
+    description: 'Commercial grade outdoor gym cardio and strength fitness equipment installed in community park.'
+  },
+  {
+    title: 'Children Multi Play Station',
+    category: 'PLAYGROUNDS',
+    location: 'Housing Society, DLF Phase 5, Gurugram (NCR)',
+    image: '/src/assets/sol_playground.jpg',
+    description: 'Heavy duty multi slide playground structure installed on safety play surface.'
+  },
+  {
+    title: 'Solar Highway Street Lighting',
+    category: 'SOLAR PROJECTS',
+    location: 'Noida Expressway Solar Infra, Noida (NCR)',
+    image: '/src/assets/sol_solar_lighting.jpg',
+    description: 'Hot dip GI solar street light poles with integrated LiFePO4 battery and dusk-to-dawn sensor.'
+  },
+  {
+    title: 'Cast Iron Garden Seating Bench',
+    category: 'PARK FURNITURE',
+    location: 'Community Park, Sector 15, Faridabad (NCR)',
+    image: '/src/assets/sol_furniture.jpg',
+    description: 'Weatherproof cast iron park seating benches with anti-theft ground mounting.'
+  },
+  {
+    title: 'Off-Grid Rooftop Solar Power Plant',
+    category: 'SOLAR PROJECTS',
+    location: 'Corporate Tech Zone, Greater Noida (NCR)',
+    image: '/src/assets/sol_solar_energy.jpg',
+    description: 'Commercial rooftop solar panel installation generating clean renewable power.'
+  },
+  {
+    title: 'Multi-Activity Gym Station',
+    category: 'OUTDOOR GYM',
+    location: 'Sports Complex, Indirapuram, Ghaziabad (NCR)',
+    image: '/src/assets/col_gym.png',
+    description: 'Outdoor fitness equipment cluster including air walker, chest press, and leg press.'
+  },
+  {
+    title: 'Adventure Playground Setup',
+    category: 'PLAYGROUNDS',
+    location: 'International School Campus, Dwarka, New Delhi',
+    image: '/src/assets/col_playground.png',
+    description: 'Children playground swings, slides, seesaw, and climbing unit setup.'
+  },
+  {
+    title: 'Solar RO Water Purification Plant',
+    category: 'SOLAR PROJECTS',
+    location: 'Institutional Complex, Kundli, Sonepat (NCR)',
+    image: '/src/assets/solar_ro_water.jpg',
+    description: 'Off-grid solar powered RO drinking water plant installed for rural community.'
+  }
+];
+
 async function run() {
   console.log('Seeding process starting...');
   const app = await NestFactory.createApplicationContext(AppModule);
@@ -863,6 +924,22 @@ async function run() {
     if (!found) {
       await videosService.create(vid);
       console.log(`- Seeded default video: ${vid.title}`);
+    }
+  }
+
+  
+  // 6. Seed Gallery (Non-destructive)
+  console.log('Updating default gallery items...');
+  const galleryService = app.get(GalleryService);
+  const existingGallery = await galleryService.findAll();
+  for (const item of gallerySeed) {
+    const found = existingGallery.find(g => g.title === item.title);
+    if (!found) {
+      await galleryService.create(item);
+      console.log(`- Seeded default gallery photo: ${item.title}`);
+    } else {
+      await galleryService.update((found as any).id || (found as any)._id, { location: item.location });
+      console.log(`- Updated NCR location for photo: ${item.title}`);
     }
   }
 

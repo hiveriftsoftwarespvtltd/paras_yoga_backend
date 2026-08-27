@@ -10,6 +10,7 @@ import { SectorsModule } from './sectors/sectors.module';
 import { EnquiriesModule } from './enquiries/enquiries.module';
 import { VideosModule } from './videos/videos.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { GalleryModule } from './gallery/gallery.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     SectorsModule,
     EnquiriesModule,
     VideosModule,
+    GalleryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
