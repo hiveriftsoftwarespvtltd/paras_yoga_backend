@@ -8,18 +8,24 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT') || 7003;
-  const origins = configService.get<string>('ALLOWED_ORIGINS') || '*';
 
   // Set JSON/urlencoded limit to 50MB for base64 file uploads
   app.use(json({ limit: '50mb' }));
   app.use(urlencoded({ limit: '50mb', extended: true }));
 
   // Enable CORS
-  const corsOrigins = origins.split(',').map(o => o.trim());
+  const corsOrigins = (
+    configService.get<string>('ALLOWED_ORIGINS') || ''
+  )
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
   app.enableCors({
-    origin: corsOrigins.length > 0 ? corsOrigins : '*',
+    origin: corsOrigins.length > 0 ? corsOrigins : true,
     credentials: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
   await app.listen(port);
